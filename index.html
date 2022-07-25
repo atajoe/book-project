@@ -6,8 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Project</title>
     <link rel="stylesheet" href="main.css">
+    <script src="books.js" defer></script>
 </head>
 <body>
-    <h1>Start of something new :)</h1>
+    <div class="header">Virtual Library</div>
+    <div class="content">
+        <div class="result" id="book-result">
+        
+        </div>
+        <div class="add-book-container" id="add-book-box">
+            <div class="add-book-hero">
+                <h1 class="book-title">New Book</h1>
+                <button class="exit-book">×</button>
+            </div>
+            <form class="full-form" action="#" method="GET">
+                <div class="add-book">
+                    <label class="book-label" for="title">Title:</label>
+                    <input type="text" id="title" name="title" required minlength="6" placeholder="Book title">
+                    <label class="book-label" for="author">Author:</label>
+                    <input type="text" name="author" id="author" placeholder="Author">
+                    <label class="book-label" for="pages">Number of pages:</label>
+                    <input type="number" name="pages" id="pages" placeholder="Number of pages">
+                    <label class="book-label" for="readit">Read it?</label>
+                    <input type="text" name="readit" id="readit">
+                    <button class="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <button class="add-book-button">+</button>
 </body>
 </html>
