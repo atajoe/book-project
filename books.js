@@ -2,25 +2,20 @@ const book_result = document.querySelector('.result')
 const add_book_button = document.querySelector('.add-book-button')
 const book_form = document.querySelector('.add-book-container')
 const exit_book_form = document.querySelector('.exit-book')
-const submit_button = document.querySelector('.submit')
+const submit_button = document.querySelector('.button-submit')
 const full_form = document.querySelector('.full-form')
+// const result_container = document.querySelector('.result-container')
+const delete_button = document.querySelector('.delete-book')
 
-full_form.addEventListener('submit', (e)=>{
-    let title = document.getElementById('title').value
-    let author = document.getElementById('author').value
-    let pages = document.getElementById('pages').value
-    let user_readit = document.getElementById('readit').value
-    add_book_to_library(title,author,pages)
-    console.log(`The title is: ${title} by ${author}. Pages: ${pages}. User read it: ${user_readit}`);
-    console.log('Form submitted')
-})
 
-console.log(submit_button)
-
-add_book_button.addEventListener('click', (e)=>{
-    console.log('Button clicked.')
-    formOpenClose()
-})
+// full_form.addEventListener('click', (e)=>{
+//     let title = document.getElementById('title').value
+//     let author = document.getElementById('author').value
+//     let pages = document.getElementById('pages').value
+//     let user_readit = document.getElementById('readit').value
+//     add_book_to_library(title,author,pages)
+//     console.log(`The title is: ${title} by ${author}. Pages: ${pages}. User read it: ${user_readit}`);
+//     console.log('Form submitted')
 
 exit_book_form.addEventListener('click', (e)=>{
     console.log('Exit button clicked')
@@ -28,8 +23,15 @@ exit_book_form.addEventListener('click', (e)=>{
 })
 
 
-submit_button.addEventListener('submit', (e)=>{
+submit_button.addEventListener('click', (e)=>{
     console.log('Submit Button clicked')
+    let title = document.getElementById('title').value
+    let author = document.getElementById('author').value
+    let pages = document.getElementById('pages').value
+    let user_readit = document.getElementById('readit').value
+    add_book_to_library(title,author,pages)
+    console.log(`The title is: ${title} by ${author}. Pages: ${pages}. User read it: ${user_readit}`);
+    console.log('Form submitted')
     closeform()
 })
 
@@ -87,11 +89,31 @@ function add_book_to_library(title,author,num_of_pages){
         throw Error('Error: Incorrect invocation');
     }
     myLibrary.push(new_book)
-    let childNode = document.createElement('p');
+    let childNode_title = document.createElement('p');
+    let childNode_author = document.createElement('p');
+    let childNode_num_of_pages = document.createElement('p');
+    let childNode_read_it = document.createElement('p');
+    let result_container = document.createElement('div');
+    let delete_button = document.createElement('button')
+    delete_button.className = "delete-book";
+    result_container.className = "result-container";
+    delete_button.textContent = "Delete";
     for (let i = 0; i < myLibrary.length; i++){
-        childNode.textContent = JSON.stringify(myLibrary[i])
-        console.log(childNode.textContent)
-        book_result.appendChild(childNode)
+        childNode_title.textContent = JSON.stringify(`Title: ${myLibrary[i].title}`)
+        childNode_author.textContent = JSON.stringify(`Author: ${myLibrary[i].author}`)
+        childNode_num_of_pages.textContent = JSON.stringify(`Pages: ${myLibrary[i].num_of_pages}`)
+        childNode_read_it.textContent = JSON.stringify(`Read It?: ${myLibrary[i].read_it}`)
+        
+        result_container.appendChild(childNode_title)
+        result_container.appendChild(childNode_author)
+        result_container.appendChild(childNode_num_of_pages)
+        result_container.appendChild(childNode_read_it)
+        result_container.appendChild(delete_button)
+        book_result.appendChild(result_container)
+        const delete_button_final = document.querySelector('.delete-book')
+        delete_button_final.addEventListener('click', (e)=>{
+            book_result.removeChild(result_container);
+        })
     }
     return 'It is the correct instance of the book object!'
 }
