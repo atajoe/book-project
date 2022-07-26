@@ -16,6 +16,14 @@ const delete_button = document.querySelector('.delete-book')
 //     add_book_to_library(title,author,pages)
 //     console.log(`The title is: ${title} by ${author}. Pages: ${pages}. User read it: ${user_readit}`);
 //     console.log('Form submitted')
+// })
+
+console.log(submit_button)
+
+add_book_button.addEventListener('click', (e)=>{
+    console.log('Button clicked.')
+    formOpenClose()
+})
 
 exit_book_form.addEventListener('click', (e)=>{
     console.log('Exit button clicked')
