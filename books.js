@@ -4,143 +4,153 @@ const book_form = document.querySelector('.add-book-container')
 const exit_book_form = document.querySelector('.exit-book')
 const submit_button = document.querySelector('.button-submit')
 const full_form = document.querySelector('.full-form')
-// const result_container = document.querySelector('.result-container')
-const delete_button = document.querySelector('.delete-book')
+let form_open = false;
+let counter = 0;
+"use strict";
 
 
-// full_form.addEventListener('click', (e)=>{
-//     let title = document.getElementById('title').value
-//     let author = document.getElementById('author').value
-//     let pages = document.getElementById('pages').value
-//     let user_readit = document.getElementById('readit').value
-//     add_book_to_library(title,author,pages)
-//     console.log(`The title is: ${title} by ${author}. Pages: ${pages}. User read it: ${user_readit}`);
-//     console.log('Form submitted')
-// })
 
-console.log(submit_button)
-
+// Event listeners for all of our buttons
 add_book_button.addEventListener('click', (e)=>{
     console.log('Button clicked.')
-    formOpenClose()
+    open_form_or_close_form()
 })
 
 exit_book_form.addEventListener('click', (e)=>{
     console.log('Exit button clicked')
-    closeform()
+    open_form_or_close_form()
 })
-
 
 submit_button.addEventListener('click', (e)=>{
     console.log('Submit Button clicked')
     let title = document.getElementById('title').value
     let author = document.getElementById('author').value
     let pages = document.getElementById('pages').value
-    let user_readit = document.getElementById('readit').value
-    add_book_to_library(title,author,pages)
-    console.log(`The title is: ${title} by ${author}. Pages: ${pages}. User read it: ${user_readit}`);
-    console.log('Form submitted')
-    closeform()
+    let user_readit = document.getElementById('readit')
+    let user_readit_value = (user_readit.options[user_readit.selectedIndex].value);
+    let added_book = create_book(title,author,pages, user_readit_value);
+    create_book_html(added_book)
+    open_form_or_close_form()
 })
 
-function formOpenClose(){
-    if (document.getElementById("add-book-box").style.transform = "scale(0)"){
+
+
+
+// Function to know if the form is open or closed.
+function open_form_or_close_form(){
+    if (form_open === false){
         document.getElementById("add-book-box").style.transform = "scale(1)"
-    } else if (document.getElementById("add-book-box").style.transform = "scale(1)"){
+        form_open = true
+    } else{
         document.getElementById("add-book-box").style.transform = "scale(0)"
+        form_open = false
     }
 }
-
-function closeform(){
-    let scaled_box = document.getElementById("add-book-box").style.transform = "scale(1)"
-    scaled_box = true ? document.getElementById("add-book-box").style.transform = "scale(0)" : console.log('It is not scaled!')
-}
-
-
-
-// List of book objects 
-let myLibrary = [];
 
 
 //Constructor to actually create a book
-function Book(title, author, num_of_pages){
+function Book(title, author, num_of_pages, user_readit_value){
     this.title = title;
     this.author = author;
     this.num_of_pages = num_of_pages;
-    this.read_it = false;
-}
-
-
-
-Book.prototype.user_read_it = function(){
-    this.read_it = true;
-    return 'User has read the book!'
-}
-
-Book.prototype.book_info = function(){
-    return(`${this.title} by ${this.author}, ${this.num_of_pages}. Book read? ${this.read_it}`)
-}
-
-Book.prototype.check_if_instance = function(){
-    if (this instanceof Book){
-        return true
-    } else {
-        return false;
-    }
+    this.read_it = user_readit_value;
 }
 
 
 //A function to register a new book object being created and add it to the myLibrary array.
-function add_book_to_library(title,author,num_of_pages){
-    let new_book = new Book(title,author,num_of_pages)
+function create_book(title,author,num_of_pages, user_readit_value){
+    let new_book = new Book(title,author,num_of_pages, user_readit_value)
     if (!(new_book instanceof Book)){
         throw Error('Error: Incorrect invocation');
     }
-    myLibrary.push(new_book)
+    counter++;
+    
+    return new_book
+}
+
+
+// Create the html for the book and append it to the result container.
+function create_book_html(new_book){
+
+    let user_new_book = new_book
     let childNode_title = document.createElement('p');
     let childNode_author = document.createElement('p');
     let childNode_num_of_pages = document.createElement('p');
     let childNode_read_it = document.createElement('p');
     let result_container = document.createElement('div');
-    let delete_button = document.createElement('button')
+    let button_container = document.createElement('div');
+    let delete_button = document.createElement('button');
+    let update_button = document.createElement('button');
+
+
     delete_button.className = "delete-book";
-    result_container.className = "result-container";
     delete_button.textContent = "Delete";
-    for (let i = 0; i < myLibrary.length; i++){
-        childNode_title.textContent = JSON.stringify(`Title: ${myLibrary[i].title}`)
-        childNode_author.textContent = JSON.stringify(`Author: ${myLibrary[i].author}`)
-        childNode_num_of_pages.textContent = JSON.stringify(`Pages: ${myLibrary[i].num_of_pages}`)
-        childNode_read_it.textContent = JSON.stringify(`Read It?: ${myLibrary[i].read_it}`)
-        
-        result_container.appendChild(childNode_title)
-        result_container.appendChild(childNode_author)
-        result_container.appendChild(childNode_num_of_pages)
-        result_container.appendChild(childNode_read_it)
-        result_container.appendChild(delete_button)
-        book_result.appendChild(result_container)
-        const delete_button_final = document.querySelector('.delete-book')
-        delete_button_final.addEventListener('click', (e)=>{
-            book_result.removeChild(result_container);
-        })
-    }
-    return 'It is the correct instance of the book object!'
+    delete_button.addEventListener("click", (e) =>{
+        let removed_child = result_container
+        book_result.removeChild(removed_child)
+    })
+
+    update_button.addEventListener("click", (e) => {
+        let removed_child = result_container
+        let user_read_change = removed_child.lastChild;
+        let user_read_final = user_read_change.previousSibling;
+        if (user_read_final.textContent === "User read it? Yes"){
+            user_read_final.textContent = "User read it? No"
+    
+        } else{
+            user_read_final.textContent = "User read it? Yes";
+        }
+    });
+
+    update_button.className = "update-book"
+    update_button.textContent = "Update"
+
+    button_container.className = "button-container";
+    button_container.appendChild(delete_button);
+    button_container.appendChild(update_button);
+
+    result_container.className = "result-container";
+    result_container.setAttribute("id", `Book-${counter}`)
+
+    childNode_read_it.className = "userread"
+
+    childNode_title.textContent = (`Title: ${user_new_book.title}`)
+    childNode_author.textContent = (`Author: ${user_new_book.author}`)
+    childNode_num_of_pages.textContent = (`Pages: ${user_new_book.num_of_pages}`)
+    childNode_read_it.textContent = (`User read it? ${user_new_book.read_it}`)
+
+    result_container.appendChild(childNode_title)
+    result_container.appendChild(childNode_author)
+    result_container.appendChild(childNode_num_of_pages)
+    result_container.appendChild(childNode_read_it)
+    result_container.appendChild(button_container)
+    book_result.appendChild(result_container)
+    console.log(book_result)
+  
 }
 
 
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_2', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
-// console.log(add_book_to_library('Harry Potter: Goblet of Fire_3', 'JK Rowling', 696))
+
+// Book.prototype.user_read_it = function(){
+//     read_it = true;
+//     return 'User has read the book!'
+// }
+
+// Book.prototype.book_info = function(){
+//     return(`${title} by ${author}, ${num_of_pages}. Book read? ${read_it}`)
+// }
+
+// Book.prototype.check_if_instance = function(){
+//     if (this instanceof Book){
+//         return true
+//     } else {
+//         return false;
+//     }
+// }
+
+
+
+
 
 
 
