@@ -10,3 +10,5 @@ Things I've learned:
 - Break down tasks into smaller functions.
 
 - When adding event listeners, make sure you add in the result_container (book card) for the arrow function to understand the context it's being executed in.
+
+- "use strict"; prevents you from declaring variables without keywords (let, const, var) and thus prevents you also writing anything directly into the window object itself.
